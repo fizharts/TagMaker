@@ -1,0 +1,9 @@
+String Nombre  = "Gohan"; 
+void setup() {
+    size(800, 800);
+}
+
+void draw() {
+  
+    text(Nombre, height/2, width/2);
+}
