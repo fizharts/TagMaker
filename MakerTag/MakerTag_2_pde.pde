@@ -1,28 +1,49 @@
+import controlP5.*;
+ControlP5 cp5;
+String textValue = "";
+PFont font ;
+PFont fuentePlaca ;
+PFont fuenteDos ;
 PShape fondo;
 int left = 0;
 int right = 0;
 int x = 0;
 int y = 0;
-int tSize = 32;
+int tSize = 80;
 color c = color(255, 200, 100);
+color btn_svg_active = color(179, 9, 42);
 color btn_svg = color(255, 23, 68);
-color btn_svg_hover = color(255, 23, 68 , 0.8);
+color btn_svg_hover = color(218, 30, 66);
 int btn_x = 30;
 int btn_y = 30;
 int btn_width = 100 ;
 int btn_height = 50 ;
 int [] btn_area = {btn_x , btn_y , btn_height , btn_width , btn_height};
 String fondoSvg = "fondoHuesos.svg";
+color textoColor = color(255, 23, 68);
+int sY = 600;
+int sX = 50;
+String georgia = "Georgia" ;
+boolean navFuente = false;
+
+Textarea myTextarea;
+String[] fontList = PFont.list();
+String textoFuentes = "";
+
+
 
 
 String Nombre  = "Nombre"; 
 void setup() {
     size(600, 600);
-    
-    
-    
+    font = createFont("Georgia",20);   
+    fuentePlaca = createFont(georgia , 20);
+    fuenteDos = createFont("Georgia" , 20); 
     y = height/2;
     x = width/2;
+    cp5 = new ControlP5(this);
+    botones();
+    formulario();
     
 
 
@@ -31,32 +52,34 @@ void setup() {
 void draw() {
 
 
+    
     fondo = loadShape(fondoSvg);
     shape(fondo, 0, 0, 600, 600);
     fill(255);
-    textSize(tSize);
-    // text(data, x, y, z);
     
-    text(Nombre, x, y);
+    
+    fill(textoColor);
+    textFont(fuentePlaca, tSize);
+    text(cp5.get(Textfield.class," ").getText(), x, y);
+    
+    textFont(fuentePlaca, tSize+2);
 
-    crearBtn( btn_x , btn_y , 100 , 50 , btn_svg , "Abrir Svg");
+    fill(255);
+    text(cp5.get(Textfield.class," ").getText(), x+1, y+1);
 
-    text(("Y:" + mouseY), 400 , 20);
-    text(("X:"+ mouseX ), 500 , 20);
+    if (navFuente) {
+        funtes();
+    }
 
-    fill(255,0,0);
-
+    println(navFuente);
 }
 
 void keyPressed() {
     println("var: "+ keyCode);
     if (keyCode == 8) {
     Nombre = Nombre.substring(0, Nombre.length()-1);
-        println(Nombre); 
     }else {
-
         if( keyCode == 37 || keyCode == 39 || keyCode == 40 || keyCode == 38 || keyCode == 521 || keyCode == 45){
-            println("es 37");
         }else{
             Nombre += key;
         }
@@ -89,6 +112,8 @@ void keyPressed() {
 
 }
 
+
+
 void fileSelected(File selection) {
     if (selection == null) {
     println("Window was closed or the user hit cancel.");
@@ -98,30 +123,26 @@ void fileSelected(File selection) {
     }
 }
 
-void crearBtn(int x , int y , int w , int h , color colorBtn , String btn){
-    fill(colorBtn);
-    textSize( 20 );
-    noStroke();
-    rect(x, y, w, h);
-    fill(255);
-    text(btn,  x+5  , y+30);
-}
+
 
 void mousePressed() {
     println(mouseX);
     println(mouseY);
-    println( overRect(btn_area[0] , btn_area[1] , btn_area[2] , btn_area[3]) );
-    if (overRect(btn_area[0] , btn_area[1] , btn_area[2] , btn_area[3]) ) {
-        selectInput("Selecciona un archivo (solo SVG):", "fileSelected");
-        
+
+}
+
+
+void controlEvent(ControlEvent theEvent) {
+    if(theEvent.isAssignableFrom(Textfield.class)) {
+    println("controlEvent: accessing a string from controller '"
+            +theEvent.getName()+"': "
+            +theEvent.getStringValue()
+            );
     }
 }
 
-boolean overRect(int x, int y, int width, int height)  {
-    if (mouseX >= x && mouseX <= x+width && 
-        mouseY >= y && mouseY <= y+height) {
-    return true;
-    } else {
-    return false;
-    }
+
+public void input(String theText) {
+    println("a textfield event for controller 'input' : "+theText);
 }
+
